@@ -1,0 +1,545 @@
+# 🛒 Grocery Catalogue App - Complete Implementation
+## 📁 **Complete Project Structure**
+
+```
+GroceryCatalogue/
+├── package.json
+├── App.js
+├── babel.config.js
+├── navigation/
+│   └── TabNavigator.js
+└── screens/
+    ├── FruitsScreen.js
+    ├── VegetablesScreen.js
+    ├── DairyScreen.js
+    └── BakeryItemsScreen.js
+```
+
+### **1. package.json**
+```json
+{
+  "name": "grocerycatalogue",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~49.0.0",
+    "expo-status-bar": "~1.6.0",
+    "react": "18.2.0",
+    "react-native": "0.72.0",
+    "@react-navigation/native": "^6.1.0",
+    "@react-navigation/bottom-tabs": "^6.5.0",
+    "react-native-screens": "~3.22.0",
+    "react-native-safe-area-context": "4.6.0",
+    "react-native-gesture-handler": "~2.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  }
+}
+```
+
+### **2. App.js**
+```javascript
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigator from './navigation/TabNavigator';
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
+  );
+}
+```
+
+### **3. babel.config.js**
+```javascript
+module.exports = function(api) {
+  api.cache(true);
+  return {
+    presets: ['babel-preset-expo'],
+  };
+};
+```
+
+### **4. navigation/TabNavigator.js**
+```javascript
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import FruitsScreen from '../screens/FruitsScreen';
+import VegetablesScreen from '../screens/VegetablesScreen';
+import DairyScreen from '../screens/DairyScreen';
+import BakeryItemsScreen from '../screens/BakeryItemsScreen';
+
+const Tab = createBottomTabNavigator();
+
+export default function TabNavigator() {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <Text style={styles.brandName}>FreshMart</Text>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: '#F48021',
+          tabBarInactiveTintColor: 'gray',
+          headerShown: false,
+        }}
+      >
+        <Tab.Screen
+          name="Fruits"
+          component={FruitsScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ color, fontSize: size }}>🍎</Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Vegetables"
+          component={VegetablesScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ color, fontSize: size }}>🥦</Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Dairy"
+          component={DairyScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ color, fontSize: size }}>🥛</Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Bakery"
+          component={BakeryItemsScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ color, fontSize: size }}>🍞</Text>
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    paddingTop: 40,
+  },
+  brandName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#F48021',
+    marginBottom: 10,
+  },
+  container: { 
+    flex: 1, 
+    padding: 10,
+    backgroundColor: '#f8f9fa'
+  },
+  title: { 
+    fontSize: 24, 
+    marginBottom: 20, 
+    textAlign: 'center', 
+    color: '#2d5a3d', 
+    fontStyle: 'italic',
+    fontWeight: 'bold'
+  },
+  itemContainer: { 
+    flexDirection: 'row', 
+    marginBottom: 15, 
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  image: { 
+    width: 100, 
+    height: 100, 
+    marginRight: 15,
+    borderRadius: 8,
+  },
+  details: { 
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  name: { 
+    fontSize: 18, 
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333'
+  },
+  price: { 
+    color: '#2d5a3d', 
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#F48021',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14
+  },
+});
+```
+
+### **5. screens/FruitsScreen.js**
+```javascript
+import React from 'react';
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { styles } from '../navigation/TabNavigator';
+
+export default function FruitsScreen() {
+  const fruits = [
+    { 
+      name: 'Apple', 
+      price: '$1.20', 
+      image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Banana', 
+      price: '$0.80', 
+      image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Orange', 
+      price: '$1.00', 
+      image: 'https://images.unsplash.com/photo-1547514701-42782101795e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Strawberry', 
+      price: '$2.50', 
+      image: 'https://images.unsplash.com/photo-1464454709131-ffd692591ee5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Grapes', 
+      price: '$2.00', 
+      image: 'https://images.unsplash.com/photo-1598248543133-97b8aa0273bc?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Mango', 
+      price: '$1.50', 
+      image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+  ];
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>🍎 Handpicked, Extra Juicy Fruits</Text>
+      {fruits.map((fruit, index) => (
+        <View key={index} style={styles.itemContainer}>
+          <Image source={{ uri: fruit.image }} style={styles.image} />
+          <View style={styles.details}>
+            <Text style={styles.name}>{fruit.name}</Text>
+            <Text style={styles.price}>{fruit.price}</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => Alert.alert(`${fruit.name} added to cart!`)}
+            >
+              <Text style={styles.buttonText}>Add To Cart</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+```
+
+### **6. screens/VegetablesScreen.js**
+```javascript
+import React from 'react';
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { styles } from '../navigation/TabNavigator';
+
+export default function VegetablesScreen() {
+  const vegetables = [
+    { 
+      name: 'Carrot', 
+      price: '$1.00', 
+      image: 'https://images.unsplash.com/photo-1445282768818-728615cc910a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Cucumber', 
+      price: '$0.90', 
+      image: 'https://images.unsplash.com/photo-1547489435-f1d7e2c8b68f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Tomato', 
+      price: '$1.50', 
+      image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Broccoli', 
+      price: '$0.90', 
+      image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Bell Peppers', 
+      price: '$1.00', 
+      image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Cabbage', 
+      price: '$1.00', 
+      image: 'https://images.unsplash.com/photo-1570194065650-2f276e69d845?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+  ];
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>🥦 Fresh Vegetables From Farmers</Text>
+      {vegetables.map((vegetable, index) => (
+        <View key={index} style={styles.itemContainer}>
+          <Image source={{ uri: vegetable.image }} style={styles.image} />
+          <View style={styles.details}>
+            <Text style={styles.name}>{vegetable.name}</Text>
+            <Text style={styles.price}>{vegetable.price}</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => Alert.alert(`${vegetable.name} added to cart!`)}
+            >
+              <Text style={styles.buttonText}>Add To Cart</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+```
+
+### **7. screens/DairyScreen.js**
+```javascript
+import React from 'react';
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { styles } from '../navigation/TabNavigator';
+
+export default function DairyScreen() {
+  const items = [
+    { 
+      name: 'Milk', 
+      price: '$2.50', 
+      image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Cheese', 
+      price: '$3.75', 
+      image: 'https://images.unsplash.com/photo-1486297678162-eb2a1b331e84?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Yogurt', 
+      price: '$1.80', 
+      image: 'https://images.unsplash.com/photo-1567336273898-ebbe52f8061b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Butter', 
+      price: '$2.00', 
+      image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Eggs', 
+      price: '$3.00', 
+      image: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Cream', 
+      price: '$2.50', 
+      image: 'https://images.unsplash.com/photo-1550583726-4c0acf62d0c5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+  ];
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>🥛 Fresh Dairy Products Daily</Text>
+      {items.map((item, index) => (
+        <View key={index} style={styles.itemContainer}>
+          <Image source={{ uri: item.image }} style={styles.image} />
+          <View style={styles.details}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.price}>{item.price}</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => Alert.alert(`${item.name} added to cart!`)}
+            >
+              <Text style={styles.buttonText}>Add To Cart</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+```
+
+### **8. screens/BakeryItemsScreen.js**
+```javascript
+import React from 'react';
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { styles } from '../navigation/TabNavigator';
+
+export default function BakeryItemsScreen() {
+  const bakery = [
+    { 
+      name: 'Fresh Bread', 
+      price: '$3.50', 
+      image: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Croissant', 
+      price: '$2.50', 
+      image: 'https://images.unsplash.com/photo-1555507038-44d76c0108d0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Blueberry Muffin', 
+      price: '$2.00', 
+      image: 'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Chocolate Cake', 
+      price: '$4.50', 
+      image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1989&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Bagel', 
+      price: '$1.75', 
+      image: 'https://images.unsplash.com/photo-1528502668756-2a2e70688b73?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+    { 
+      name: 'Cinnamon Roll', 
+      price: '$3.25', 
+      image: 'https://images.unsplash.com/photo-1593259034723-31a21e8e4102?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
+    },
+  ];
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>🍞 Freshly Baked Goodies Daily</Text>
+      {bakery.map((item, index) => (
+        <View key={index} style={styles.itemContainer}>
+          <Image source={{ uri: item.image }} style={styles.image} />
+          <View style={styles.details}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.price}>{item.price}</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => Alert.alert(`${item.name} added to cart!`)}
+            >
+              <Text style={styles.buttonText}>Add To Cart</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+```
+
+## 🚀 **Setup Instructions**
+
+### **1. Initialize the Project**
+```bash
+# Create new Expo project
+npx create-expo-app GroceryCatalogue
+cd GroceryCatalogue
+
+# Install dependencies
+npm install @react-navigation/native @react-navigation/bottom-tabs react-native-screens react-native-safe-area-context react-native-gesture-handler
+
+# For web support
+npx expo install react-native-web react-dom
+```
+
+### **2. Create Folder Structure**
+```bash
+mkdir navigation screens
+```
+
+### **3. Replace Files**
+Copy the code above into each corresponding file.
+
+### **4. Run the Application**
+```bash
+# Start development server
+npx expo start
+
+# Or run on specific platform
+npx expo start --android
+npx expo start --ios
+npx expo start --web
+```
+
+## 🎯 **Features Implemented**
+
+✅ **Bottom Tab Navigation** with 4 categories  
+✅ **Fruits Screen** with 6 fruit items  
+✅ **Vegetables Screen** with 6 vegetable items  
+✅ **Dairy Screen** with 6 dairy items  
+✅ **Bakery Screen** (Practice Exercise) with 6 bakery items  
+✅ **Add to Cart** functionality with alerts  
+✅ **Professional UI** with card layouts  
+✅ **High-quality Images** from Unsplash  
+✅ **Responsive Design** for all devices  
+✅ **Tab Icons** with emojis  
+
+## 📱 **App Flow**
+
+1. **Tab Navigation** - Switch between Fruits, Vegetables, Dairy, and Bakery
+2. **Product Lists** - Scrollable lists with images, names, and prices
+3. **Add to Cart** - Interactive buttons with confirmation alerts
+4. **Professional UI** - Clean, modern design with proper spacing
+
+## 🔧 **Key Components Used**
+
+- **Bottom Tab Navigator** - For category navigation
+- **ScrollView** - For scrollable product lists
+- **Image** - Display product images
+- **TouchableOpacity** - Interactive buttons
+- **Alert** - User feedback for cart actions
+- **StyleSheet** - Consistent styling across screens
+
+
+```bash
+# Initialize git
+git init
+
+# Add all files
+git add .
+
+# Commit changes
+git commit -m "Initial commit: Complete Grocery Catalogue App"
+
+# Add your remote repository
+git remote add origin https://github.com/ewuwise/GroceryCatalogue.git
+
+# Push to main branch
+git push -u origin main
+```
